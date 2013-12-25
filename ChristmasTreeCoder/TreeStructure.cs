@@ -10,7 +10,7 @@ namespace ChristmasTreeCoder
     public sealed class TreeStructure
     {
         private TreeLevel[] levels;
-        int centerDisplacement = 0;
+        int centerDisplacement;
         int bottomLevel;
 
         private void CalculateNumLevels(int messageLength)
@@ -48,23 +48,46 @@ namespace ChristmasTreeCoder
                 }
                 levels[currentLevel].levelSpaces += 2;
                 currentLevel--;
+                messageLength -= 2;
             }
 
             centerDisplacement = levels[bottomLevel].levelSpaces / 2;
         }
+        
+        private void FillTreeLevels(string secretMessage)
+        {
+            int start = 0;
+            for (int i = 0; i <= bottomLevel; i++)
+            {
+                string substring = secretMessage.Substring(start, start + levels[i].levelSpaces);
+                start = levels[i].levelSpaces;
+                levels[i].levelString = String.Copy(substring);
+            }
+        }
 
+        private void PrintSpaces(int spaces)
+        {
+            for (int i = 0; i < spaces*2; i++ )
+                Console.Write(" ");
+        }
 
         public void PrintTree()
         {
-
+            for (int i = 0; i <= bottomLevel; i++)
+            {
+                PrintSpaces(centerDisplacement - levels[i].levelSpaces / 2);
+                Console.WriteLine(levels[i].levelString);
+            }
         }
 
         public TreeStructure(string secretMessage)
         {
             int messageLength = secretMessage.Length;
             CalculateNumLevels(messageLength);
-            levels = new TreeLevel[bottomLevel];
+            levels = new TreeLevel[bottomLevel + 1];
             CalculateLevelLengths(messageLength);
+            FillTreeLevels(secretMessage);
+            PrintTree();
         }
     }
 }

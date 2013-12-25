@@ -12,8 +12,7 @@ namespace ChristmasTreeCoder
         {
             // Read in text
             String text = System.IO.File.ReadAllText(@"C:\users\lizzy\documents\visual studio 2013\Projects\ChristmasTreeCoder\ChristmasTreeCoder\SecretMessageToCode.txt");
-            Console.WriteLine(text.Length );
-
+            TreeStructure tree = new TreeStructure(text);
         }
 
 
