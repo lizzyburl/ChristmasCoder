@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,14 +58,26 @@ namespace ChristmasTreeCoder
         private void FillTreeLevels(string secretMessage)
         {
             int start = 0;
+            int displacement = 0;
             for (int i = 0; i <= bottomLevel; i++)
             {
                 string substring = secretMessage.Substring(start, start + levels[i].levelSpaces);
                 start = levels[i].levelSpaces;
-                levels[i].levelString = String.Copy(substring);
+                levels[i].levelString = EncodedLevel(ref displacement, substring);
             }
         }
 
+        private string EncodedLevel(ref int displacement, string substring)
+        {
+            char[] alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+            StringWriter writer = new StringWriter();
+            foreach (char uncodedChar in substring)
+            {
+                writer.Write(alphabet[(uncodedChar - 'a' + displacement) % 26]);
+                displacement++;
+            }
+            return writer.ToString();
+        }
         private void PrintSpaces(int spaces)
         {
             for (int i = 0; i < spaces*2; i++ )
@@ -86,7 +99,7 @@ namespace ChristmasTreeCoder
             CalculateNumLevels(messageLength);
             levels = new TreeLevel[bottomLevel + 1];
             CalculateLevelLengths(messageLength);
-            FillTreeLevels(secretMessage);
+            FillTreeLevels(secretMessage.ToLower());
             PrintTree();
         }
     }
