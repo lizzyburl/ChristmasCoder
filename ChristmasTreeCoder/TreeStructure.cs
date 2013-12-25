@@ -84,10 +84,9 @@ namespace ChristmasTreeCoder
                 Console.Write(" ");
         }
 
-        private void PrintLine(int level)
+        private void PrintLine(int level, Random random)
         {
             ConsoleColor[] ornaments = { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.White };
-            Random random = new Random();
             foreach (char letter in levels[level].levelString)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -103,10 +102,11 @@ namespace ChristmasTreeCoder
         }
         public void PrintTree()
         {
+            Random random = new Random();
             for (int i = 0; i <= bottomLevel; i++)
             {
                 PrintSpaces(centerDisplacement - levels[i].levelSpaces / 2);
-                PrintLine(i);
+                PrintLine(i, random);
             }
         }
 
