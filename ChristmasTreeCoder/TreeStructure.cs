@@ -13,7 +13,6 @@ namespace ChristmasTreeCoder
         private TreeLevel[] levels;
         int centerDisplacement;
         int bottomLevel;
-
         private void CalculateNumLevels(int messageLength)
         {
             int increment = 1;
@@ -58,29 +57,21 @@ namespace ChristmasTreeCoder
         private void FillTreeLevels(string secretMessage)
         {
             int start = 0;
-            int displacement = 0;
-            for (int i = 0; i <= bottomLevel; i++)
+            for (int i = 0; i < bottomLevel; i++)
             {
-                string substring = secretMessage.Substring(start, start + levels[i].levelSpaces);
-                start = levels[i].levelSpaces;
-                levels[i].levelString = EncodedLevel(ref displacement, substring);
+                string substring;
+                int subLength = secretMessage.Length;
+                int end = start + levels[i].levelSpaces;
+                substring = secretMessage.Substring(start, levels[i].levelSpaces);
+                start += levels[i].levelSpaces;
+                levels[i].levelString = substring;
             }
+            levels[bottomLevel].levelString = secretMessage.Substring(start);
         }
 
-        private string EncodedLevel(ref int displacement, string substring)
-        {
-            char[] alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-            StringWriter writer = new StringWriter();
-            foreach (char uncodedChar in substring)
-            {
-                writer.Write(alphabet[(uncodedChar - 'a' + displacement) % 26]);
-                displacement++;
-            }
-            return writer.ToString();
-        }
         private void PrintSpaces(int spaces)
         {
-            for (int i = 0; i < spaces*2; i++ )
+            for (int i = 0; i < spaces; i++ )
                 Console.Write(" ");
         }
 
@@ -110,9 +101,15 @@ namespace ChristmasTreeCoder
             }
         }
 
+        public void WriteToTextFile(System.IO.StreamWriter outputFile)
+        {
+            for (int i = 0; i <= bottomLevel; i++)
+                outputFile.WriteLine(levels[i].levelString);
+        }
         public TreeStructure(string secretMessage)
         {
             int messageLength = secretMessage.Length;
+            int disp = 0;
             CalculateNumLevels(messageLength);
             levels = new TreeLevel[bottomLevel + 1];
             CalculateLevelLengths(messageLength);
